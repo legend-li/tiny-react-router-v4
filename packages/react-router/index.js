@@ -24,7 +24,7 @@ export function BrowserRouter (props) {
     }
   })
   useEffect(() => {
-    window.addEventListener('popstate', (e) => {
+    const popstateHandler = (e) => {
       const path = e.state.path
       setState(preState => {
         return {
@@ -35,7 +35,11 @@ export function BrowserRouter (props) {
           }
         }
       })
-    })
+    }
+    window.addEventListener('popstate', popstateHandler)
+    return () => {
+      window.removeEventListener('popstate', popstateHandler)
+    }
   }, [])
   return <RouterContext.Provider value={state}>{props.children}</RouterContext.Provider>
 }
